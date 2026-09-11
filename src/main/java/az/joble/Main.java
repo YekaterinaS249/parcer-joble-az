@@ -88,40 +88,43 @@ public class Main {
 
 
                                                 Elements ads = document5.select("[class*='LFAdTileHorizontal_adTileHorizontalContentContainer']");
-                                                System.out.println( "Количество " + ads.size());
+                                                System.out.println("Количество " + ads.size());
 
-                                                Element first = ads.first();
-                                                String name5  = first.select("a p").text();
-                                                String link5 = first.select("a").attr("abs:href");
+                                                for (Element ad : ads) {
+                                                    String name5 = ad.select("a p").text();
+                                                    String link5 = ad.select("a").attr("abs:href");
+                                                    System.out.println("Название товара " + name5);
+                                                    System.out.println("Линк " + link5);
 
-                                                Document document6 = Jsoup.connect(link5)
-                                                        .userAgent("Mozilla/5.0")
-                                                        .get();
+                                                    Document document6 = Jsoup.connect(link5)
+                                                            .userAgent("Mozilla/5.0")
+                                                            .get();
 
-                                                String price  = document6.select("p[data-component='lf-heading']").text();
-                                                System.out.println("Цена " + price);
+                                                    String price = document6.select("p[data-component='lf-heading']").text();
+                                                    System.out.println("Цена " + price);
 
-                                                String city = document6.select("div.AdDetailMap_adDetailCityWrap__7LBol p").text();
-                                                System.out.println("Город " + city);
+                                                    String city = document6.select("div.AdDetailMap_adDetailCityWrap__7LBol p").text();
+                                                    System.out.println("Город " + city);
 
-                                                String model = document6.select("li:has(p:contains(Model:)) a").text();
-                                                System.out.println("Модель " + model);
+                                                    String model = document6.select("li:has(p:contains(Model:)) a").text();
+                                                    System.out.println("Модель " + model);
 
-                                                String condition = document6.select("li:has(p:contains(Vəziyyəti:)) a").text();
-                                                System.out.println("Состояние " + condition);
+                                                    String condition = document6.select("li:has(p:contains(Vəziyyəti:)) a").text();
+                                                    System.out.println("Состояние " + condition);
 
-                                                String optional = document6.select("li:has(p:contains(Əlavə olaraq:)) a").text();
-                                                System.out.println("Дополнительно " + optional);
+                                                    String optional = document6.select("li:has(p:contains(Əlavə olaraq:)) a").text();
+                                                    System.out.println("Дополнительно " + optional);
 
-                                                String memory = document6.select("li:has(p:contains(Yaddaş tutumu:)) a").text();
-                                                System.out.println("Память " + memory);
+                                                    String memory = document6.select("li:has(p:contains(Yaddaş tutumu:)) a").text();
+                                                    System.out.println("Память " + memory);
 
+                                                }
                                             }
+
                                         }
-
                                     }
-                                }
 
+                                }
                             }
                         }
                     }
