@@ -7,7 +7,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 @Slf4j
-public class Main {
+public class Iphone18 {
     static void main(String[] args) throws Exception {
         String url = "https://lalafo.az/";
 
