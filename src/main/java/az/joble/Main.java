@@ -1,10 +1,12 @@
 package az.joble;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+@Slf4j
 public class Main {
     static void main(String[] args) throws Exception {
         String url = "https://lalafo.az/";
@@ -13,11 +15,14 @@ public class Main {
                 .userAgent("Mozilla/5.0")
                 .get();
 
-        System.out.println(document.title());
+        ExcelWriter excelWriter = new ExcelWriter();
+        excelWriter.createExcel();
+
+        log.info("Название страницы: {}", document.title());
 
         Elements categories = document.select("[data-component='category-grid-item']");
 
-        System.out.println("Количество категорий: " + categories.size());
+        log.info("Количечтво категорий: {}", categories.size());
 
         for (Element category : categories) {
             String name = category.select("p").text();
@@ -37,8 +42,8 @@ public class Main {
                     String link1 = category1.attr("abs:href");
 
                     if (name1.equals("Mobil telefon və aksesuarlar")) {
-                        System.out.println("Подкатегории " + name1);
-                        System.out.println("Cсылка " + link1);
+                        log.info("Название подкатегории: {}", name1);
+                        log.info("Линк: {}", link1);
 
                         Document document2 = Jsoup.connect(link1)
                                 .userAgent("Mozilla/5.0")
@@ -52,8 +57,8 @@ public class Main {
 
 
                             if (name2.equals("Mobil telefonlar")) {
-                                System.out.println("Категория " + name2);
-                                System.out.println("Линк " + link2);
+                                log.info("Название категории: {}", name2);
+                                log.info("Лин: {}", link2);
 
                                 Document document3 = Jsoup.connect(link2)
                                         .userAgent("Mozilla/5.0")
@@ -66,8 +71,8 @@ public class Main {
                                     String link3 = category3.attr("abs:href");
 
                                     if (name3.equals("Apple iPhone")) {
-                                        System.out.println("Марка телефона " + name3);
-                                        System.out.println("Линк " + link3);
+                                        log.info("Модель: {}", name3);
+                                        log.info("Линк: {}", link3);
 
                                         Document document4 = Jsoup.connect(link3)
                                                 .userAgent("Mozilla/5.0")
@@ -88,35 +93,39 @@ public class Main {
 
 
                                                 Elements ads = document5.select("[class*='LFAdTileHorizontal_adTileHorizontalContentContainer']");
-                                                System.out.println("Количество " + ads.size());
+                                                log.info("Количество товара: {}", ads.size());
 
                                                 for (Element ad : ads) {
                                                     String name5 = ad.select("a p").text();
                                                     String link5 = ad.select("a").attr("abs:href");
-                                                    System.out.println("Название товара " + name5);
-                                                    System.out.println("Линк " + link5);
+                                                    log.info("Название товара: {}", name5);
+                                                    log.info("Линк: {}", link5);
 
                                                     Document document6 = Jsoup.connect(link5)
                                                             .userAgent("Mozilla/5.0")
                                                             .get();
 
                                                     String price = document6.select("p[data-component='lf-heading']").text();
-                                                    System.out.println("Цена " + price);
+                                                    log.info("Цена: {}", price);
 
                                                     String city = document6.select("div.AdDetailMap_adDetailCityWrap__7LBol p").text();
-                                                    System.out.println("Город " + city);
+                                                    log.info("Город: {}", city);
 
                                                     String model = document6.select("li:has(p:contains(Model:)) a").text();
-                                                    System.out.println("Модель " + model);
+                                                    log.info("Mодель: {}", model);
 
                                                     String condition = document6.select("li:has(p:contains(Vəziyyəti:)) a").text();
-                                                    System.out.println("Состояние " + condition);
+                                                    log.info("Состояние: {}", condition);
 
                                                     String optional = document6.select("li:has(p:contains(Əlavə olaraq:)) a").text();
-                                                    System.out.println("Дополнительно " + optional);
+                                                    log.info("Дополнительно : {}", optional);
 
                                                     String memory = document6.select("li:has(p:contains(Yaddaş tutumu:)) a").text();
-                                                    System.out.println("Память " + memory);
+                                                    log.info("Память: {}", memory);
+
+                                                    excelWriter.addAd(name5, price, city, model, condition, memory, optional, link5);
+
+                                                    excelWriter.saveExcel();
 
                                                 }
                                             }
